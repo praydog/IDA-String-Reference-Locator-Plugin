@@ -22,7 +22,7 @@ void Plugin::OnRun(int arg)
     if (arg == -1)
         PLUGIN.flags |= PLUGIN_UNL;
 
-	msg("Stringref plugin ran.\n");
+    msg("Stringref plugin ran.\n");
 
     std::vector<RefInfo> references;
     FillReferences(references);
@@ -87,7 +87,7 @@ void Plugin::OnXRef(xrefblk_t* xref, std::vector<RefInfo>& references)
 
             auto strInfo = m_stringList[opcodeRef];
 
-            if (!strInfo || strInfo->GetType() == -1)
+            if (!strInfo || strInfo->type == -1)
                 continue;
 
             xrefblk_t stringXref;

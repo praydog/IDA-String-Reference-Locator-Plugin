@@ -24,10 +24,10 @@ void IDAStringList::Populate()
 
     for (size_t i = 0; i < currentQuantity; i++)
     {
-        string_info_t si;
-        get_strlist_item(i, &si);
+        std::shared_ptr<IDAString> si = std::make_shared<IDAString>();
+        get_strlist_item(i, si.get());
 
-        m_stringList[si.ea] = std::make_shared<IDAString>(si.ea, si.type, si.length);
+        m_stringList[si->ea] = si;
     }
 }
 
@@ -36,25 +36,16 @@ void IDAStringList::Refresh()
     refresh_strlist(inf.minEA, inf.maxEA);
 }
 
-IDAString::IDAString() 
-    : m_type(-1),
-    m_length(0),
-    m_address(0)
+IDAString::IDAString()
 {
-
-}
-
-IDAString::IDAString(ea_t address, int type, unsigned int len) 
-    : m_type(type),
-    m_length(len),
-    m_address(address)
-{
-
+    type = -1;
+    ea = 0;
+    length = 0;
 }
 
 std::string IDAString::Read() const
 {
-    if (m_type == 0)
+    if (type == 0)
         return ReadA();
     else
     {
@@ -65,10 +56,10 @@ std::string IDAString::Read() const
 
 std::string IDAString::ReadA() const
 {
-    std::unique_ptr<unsigned char[]> buf(new unsigned char[m_length]);
-    get_many_bytes(m_address, buf.get(), m_length);
+    std::unique_ptr<unsigned char[]> buf(new unsigned char[length]);
+    get_many_bytes(ea, buf.get(), length);
 
-    for (unsigned int i = 0; i < m_length; ++i)
+    for (int i = 0; i < length; ++i)
     {
         if (buf.get()[i] == '\0')
             break;
@@ -80,13 +71,13 @@ std::string IDAString::ReadA() const
         }
     }
 
-    return std::string((char*)buf.get(), m_length);
+    return std::string((char*)buf.get(), length);
 }
 
 std::wstring IDAString::ReadW() const
 {
-    std::unique_ptr<wchar_t[]> buf(new wchar_t[m_length]);
-    get_many_bytes(m_address, buf.get(), m_length);
+    std::unique_ptr<wchar_t[]> buf(new wchar_t[length]);
+    get_many_bytes(ea, buf.get(), length);
 
-    return std::wstring(buf.get(), m_length);
+    return std::wstring(buf.get(), length);
 }

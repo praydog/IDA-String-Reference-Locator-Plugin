@@ -7,38 +7,14 @@
 #include <pro.h>
 #include <strlist.hpp>
 
-class IDAString
+class IDAString : public string_info_t
 {
 public:
     IDAString();
-    IDAString(ea_t address, int type, unsigned int len);
 
     std::string Read() const;
     std::string ReadA() const;
     std::wstring ReadW() const;
-
-    operator int() const {
-        return m_type;
-    }
-
-    ea_t GetEA() const {
-        return m_address;
-    }
-
-    int GetType() const {
-        return m_type;
-    }
-
-    int GetLength() const {
-        return m_length;
-    }
-
-private:
-    // eh, can't hurt.
-    ea_t m_address;
-
-    int m_type;
-    unsigned int m_length;
 };
 
 // Purpose: faster than looping through the entire string list every time we want to check something.

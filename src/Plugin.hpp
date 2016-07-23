@@ -37,11 +37,11 @@ private:
     void SortAndPrint(std::vector<RefInfo>& references);
 
 public:
-    static constexpr int   flags = 0;
-    static constexpr char* comment = "Finds string reference near a reference.";
-    static constexpr char* name = "String Reference Locator";
-    static constexpr char* help = "Find String References Near Reference";
-    static constexpr char* hotkey = "Ctrl+Alt+Q";
+    static constexpr int   flags   = 0;
+    static constexpr char* comment = "Finds string references near a reference.";
+    static constexpr char* name    = "String Reference Locator";
+    static constexpr char* help    = "Finds string references near a reference.";
+    static constexpr char* hotkey  = "Ctrl+Alt+Q";
 
 private:
     IDAStringList m_stringList;
