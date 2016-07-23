@@ -80,13 +80,13 @@ std::string IDAString::ReadA() const
         }
     }
 
-    return std::string((char*)buf.get());
+    return std::string((char*)buf.get(), m_length);
 }
 
 std::wstring IDAString::ReadW() const
 {
     std::unique_ptr<wchar_t[]> buf(new wchar_t[m_length]);
-    get_many_bytes(m_address, buf.get(), 256);
+    get_many_bytes(m_address, buf.get(), m_length);
 
-    return std::wstring(buf.get());
+    return std::wstring(buf.get(), m_length);
 }
