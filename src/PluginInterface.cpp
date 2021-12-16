@@ -13,7 +13,7 @@ plugin_t PLUGIN
     // lambdas let us use class objects to do this instead of C-style standalone/static functions.
     []() { return plugin.OnInit(); },
     []() { return plugin.OnTerminate(); },
-    [](int arg) { return plugin.OnRun(arg); },
+    [](size_t arg) { plugin.OnRun(arg); return true; },
 
     plugin.comment,
     plugin.help,

@@ -25,7 +25,7 @@ void IDAStringList::Populate()
     for (size_t i = 0; i < currentQuantity; i++)
     {
         std::shared_ptr<IDAString> si = std::make_shared<IDAString>();
-        get_strlist_item(i, si.get());
+        get_strlist_item(si.get(), i);
 
         m_stringList[si->ea] = si;
     }
@@ -33,7 +33,9 @@ void IDAStringList::Populate()
 
 void IDAStringList::Refresh()
 {
-    refresh_strlist(inf.minEA, inf.maxEA);
+    //refresh_strlist(inf.minEA, inf.maxEA);
+    get_strlist_options()->display_only_existing_strings = 0;
+    build_strlist();
 }
 
 IDAString::IDAString()
@@ -57,7 +59,8 @@ std::string IDAString::Read() const
 std::string IDAString::ReadA() const
 {
     std::unique_ptr<unsigned char[]> buf(new unsigned char[length]);
-    get_many_bytes(ea, buf.get(), length);
+    get_bytes(buf.get(), length, ea);
+    
 
     for (int i = 0; i < length; ++i)
     {
@@ -77,7 +80,7 @@ std::string IDAString::ReadA() const
 std::wstring IDAString::ReadW() const
 {
     std::unique_ptr<wchar_t[]> buf(new wchar_t[length]);
-    get_many_bytes(ea, buf.get(), length);
+    get_bytes(buf.get(), length, ea);
 
     return std::wstring(buf.get(), length);
 }

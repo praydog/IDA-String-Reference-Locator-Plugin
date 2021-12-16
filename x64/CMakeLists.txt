@@ -14,7 +14,7 @@ LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 include_directories("../src")
 
-add_definitions(-D__EA64__ -D__IDP__)
+add_definitions(-D__EA64__ -D__IDP__ -D__X64__)
 add_library(${PROJECT_NAME64} SHARED ${HEADERS} ${SOURCES})
 
 if (WIN32)
@@ -27,3 +27,4 @@ elseif (APPLE)
 ENDIF()
 
 set_target_properties(${PROJECT_NAME64} PROPERTIES SUFFIX ".p64")
+target_link_options(${PROJECT_NAME64} PUBLIC /EXPORT:PLUGIN)

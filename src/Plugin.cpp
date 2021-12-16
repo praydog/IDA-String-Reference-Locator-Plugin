@@ -5,6 +5,7 @@
 #include <ida.hpp>
 #include <idp.hpp>
 #include <loader.hpp>
+#include <funcs.hpp>
 
 #include "Plugin.hpp"
 
@@ -17,7 +18,7 @@ Plugin::Plugin()
 
 }
 
-void Plugin::OnRun(int arg)
+void Plugin::OnRun(size_t arg)
 {
     if (arg == -1)
         PLUGIN.flags |= PLUGIN_UNL;
@@ -53,30 +54,32 @@ void Plugin::FillReferences(std::vector<RefInfo>& references)
 
 void Plugin::OnXRef(xrefblk_t* xref, std::vector<RefInfo>& references)
 {
-    auto xrefFlags = getFlags(xref->from);
+    auto xrefFlags = get_flags(xref->from);
 
-    if (!isCode(xrefFlags))
+    if (!is_code(xrefFlags))
         return;
-
-    auto functionArea = funcs.get_area(xref->from);
+    
+    auto functionArea = get_func(xref->from);
 
     if (!functionArea)
         return;
 
-    for (auto instruction = functionArea->startEA; instruction < functionArea->endEA; instruction += cmd.size)
+    insn_t cmd;
+
+    for (auto instruction = functionArea->start_ea; instruction < functionArea->end_ea; instruction += cmd.size)
     {
         // bail out (maybe some obfuscation will break this?)
-        if (!decode_insn(instruction))
+        if (!decode_insn(&cmd, instruction))
             break;
 
-        for (const auto& op : cmd.Operands)
+        for (const auto& op : cmd.ops)
         {
             ea_t opcodeRef;
 
             // check op.addr if it's valid, and then op.value as the fallback
             for (opcodeRef = op.addr; opcodeRef != op.value; opcodeRef = op.value)
             {
-                if (opcodeRef && isData(getFlags(opcodeRef)))
+                if (opcodeRef && is_data(get_flags(opcodeRef)))
                     break;
 
                 opcodeRef = 0;

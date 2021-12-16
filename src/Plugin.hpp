@@ -26,7 +26,7 @@ public:
     Plugin();
 
     // IDA required functions
-    void OnRun(int arg);
+    void OnRun(size_t arg);
 
     int OnInit();
     void OnTerminate();
@@ -37,7 +37,7 @@ private:
     void SortAndPrint(std::vector<RefInfo>& references);
 
 public:
-    static constexpr int   flags   = 0;
+    static constexpr uint32   flags   = 0;
     static constexpr char* comment = "Finds string references near a reference.";
     static constexpr char* name    = "String Reference Locator";
     static constexpr char* help    = "Finds string references near a reference.";
